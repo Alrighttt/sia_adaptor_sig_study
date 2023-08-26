@@ -1,0 +1,16 @@
+[package]
+name = "sia_adaptor_sig_study"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+curve25519-dalek = { package = "curve25519-dalek-ng", version = "4" }
+ecdsa_fun = { git = "https://github.com/LLFourn/secp256kfun", rev = "296fd6f2", default-features = false, features = [ "libsecp_compat", "serde", "adaptor" ] }
+ed25519-dalek = "1"
+sigma_fun = { git = "https://github.com/LLFourn/secp256kfun", rev = "296fd6f2", default-features = false, features = [ "ed25519", "serde", "secp256k1", "alloc" ] }
+sha2 = "0.10"
+rand = "0.8"
+rand_chacha = "0.3"
+conquer-once = "0.4"
