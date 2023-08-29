@@ -90,7 +90,7 @@ fn main() {
         );
 
     // FIRST CASE: Alice starts with BTC-like coin
-    // Alice creates an adaptor signature and a normal signature signing `sighash`
+    // Alice creates an adaptor signature
     // This adaptor signature is not a valid signature until Bob adapts it with s_b.
     let example_sighash = [0x0; 32];
     let alice_adaptor_signature: EncryptedSignature =
@@ -105,7 +105,6 @@ fn main() {
     ));
 
     // Bob adapts alice_adaptor_signature with s_b
-    // Bob broadcasts this and `alice_signature` to spend the BTC UTXO
     let decrypted_signature = adaptor.decrypt_signature(
         &ed25519_scalar_to_ecdsa_scalar(&s_b),
         alice_adaptor_signature.clone(),
@@ -126,7 +125,7 @@ fn main() {
 
 
     // OTHER CASE: Alices starts with SIA
-    // Bob creates an adaptor signature and a normal signature signing `sighash`
+    // Bob creates an adaptor signature
     // This adaptor signature is not a valid signature until Alice adapts it with s_a.
     let example_sighash = [0x1; 32];
     let bob_adaptor_signature: EncryptedSignature =
