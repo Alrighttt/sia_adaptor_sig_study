@@ -54,6 +54,7 @@ fn ed25519_scalar_to_ecdsa_scalar(ed25519_scalar: &Ed25519Scalar) -> EcdsaScalar
 
 fn main() {
     let mut rng = OsRng;
+    let ecdsa = ECDSA::verify_only();
 
     // generate a one-time-use secp256k1 private key for each party
     // these keys are never leaked to the other party
@@ -68,17 +69,17 @@ fn main() {
 
     // create a proof that this private key is valid on both ed25519 and secp256k1 curves
     // this will panic if the scalar is not on either curve
-    let (s_a_dleq_proof, (s_a_public_secp266k1, s_a_public_ed25519)) =
+    let (s_a_dleq_proof, (s_a_public_secp256k1, s_a_public_ed25519)) =
         CROSS_CURVE_PROOF_SYSTEM.prove(&s_a, &mut rng);
-    let (s_b_dleq_proof, (s_b_public_secp266k1, s_b_public_ed25519)) =
+    let (s_b_dleq_proof, (s_b_public_secp256k1, s_b_public_ed25519)) =
         CROSS_CURVE_PROOF_SYSTEM.prove(&s_b, &mut rng);
 
-    // both parties exchange x.public, s_x_dleq_proof, s_x_public_secp266k1, s_x_public_ed25519
+    // both parties exchange x.public, s_x_dleq_proof, s_x_public_secp256k1, s_x_public_ed25519
     // to each other
     let validate_alice_proof = CROSS_CURVE_PROOF_SYSTEM
-        .verify(&s_a_dleq_proof, (s_a_public_secp266k1, s_a_public_ed25519));
+        .verify(&s_a_dleq_proof, (s_a_public_secp256k1, s_a_public_ed25519));
     let validate_bob_proof = CROSS_CURVE_PROOF_SYSTEM
-        .verify(&s_b_dleq_proof, (s_b_public_secp266k1, s_b_public_ed25519));
+        .verify(&s_b_dleq_proof, (s_b_public_secp256k1, s_b_public_ed25519));
     // both parties validate the other's proof
     assert!(validate_alice_proof);
     assert!(validate_bob_proof);
@@ -93,17 +94,12 @@ fn main() {
     // This adaptor signature is not a valid signature until Bob adapts it with s_b.
     let example_sighash = [0x0; 32];
     let alice_adaptor_signature: EncryptedSignature =
-        adaptor.encrypted_sign(&a.private, &s_b_public_secp266k1, &example_sighash);
-    let alice_signature = a.sign(&example_sighash);
-
-    // Bob verifies Alice's normal signature
-    let ecdsa = ECDSA::verify_only();
-    assert!(ecdsa.verify(&a.public, &example_sighash, &alice_signature));
+        adaptor.encrypted_sign(&a.private, &s_b_public_secp256k1, &example_sighash);
 
     // Bob verifies alice_adaptor_signature will be a valid signature if adapted with s_b
     assert!(adaptor.verify_encrypted_signature(
         &a.public,
-        &s_b_public_secp266k1,
+        &s_b_public_secp256k1,
         &example_sighash,
         &alice_adaptor_signature,
     ));
@@ -115,47 +111,48 @@ fn main() {
         alice_adaptor_signature.clone(),
     );
 
+    // Bob broadcasts this signature and a signature of his own to spend the BTC UTXO
+    assert!(ecdsa.verify(&a.public, &example_sighash, &decrypted_signature));
+
     // Alice extracts s_b allowing her to spend the SIA UTXO
     let extracted_s_b = adaptor
         .recover_decryption_key(
-            &s_b_public_secp266k1,
+            &s_b_public_secp256k1,
             &decrypted_signature,
             &alice_adaptor_signature,
         )
         .expect("signature must decrypt");
     assert_eq!(extracted_s_b, ed25519_scalar_to_ecdsa_scalar(&s_b));
 
+
     // OTHER CASE: Alices starts with SIA
     // Bob creates an adaptor signature and a normal signature signing `sighash`
     // This adaptor signature is not a valid signature until Alice adapts it with s_a.
     let example_sighash = [0x1; 32];
     let bob_adaptor_signature: EncryptedSignature =
-        adaptor.encrypted_sign(&b.private, &s_a_public_secp266k1, &example_sighash);
-    let bob_signature = b.sign(&example_sighash);
-
-    // Alice verifies Bob's normal signature
-    let ecdsa = ECDSA::verify_only();
-    assert!(ecdsa.verify(&b.public, &example_sighash, &bob_signature));
+        adaptor.encrypted_sign(&b.private, &s_a_public_secp256k1, &example_sighash);
 
     // Alice verifies bob_adaptor_signature will be a valid signature if adapted with s_a
     assert!(adaptor.verify_encrypted_signature(
         &b.public,
-        &s_a_public_secp266k1,
+        &s_a_public_secp256k1,
         &example_sighash,
         &bob_adaptor_signature,
     ));
 
     // Alice adapts bob_adaptor_signature with s_a
-    // Alice broadcasts this and `bob_signature` to spend the BTC UTXO
     let decrypted_signature = adaptor.decrypt_signature(
         &ed25519_scalar_to_ecdsa_scalar(&s_a),
         bob_adaptor_signature.clone(),
     );
 
+    // Alice broadcasts this signature and a signature of her own to spend the BTC UTXO
+    assert!(ecdsa.verify(&b.public, &example_sighash, &decrypted_signature));
+
     // Bob extracts s_a allowing him to spend the SIA UTXO
     let extracted_s_a = adaptor
         .recover_decryption_key(
-            &s_a_public_secp266k1,
+            &s_a_public_secp256k1,
             &decrypted_signature,
             &bob_adaptor_signature,
         )
