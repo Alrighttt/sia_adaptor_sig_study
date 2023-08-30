@@ -108,9 +108,9 @@ Steps 0 - 6. identical to the successful path
 
 
 ## Sequence of an unsuccessful swap where Alice starts with BTC, both parties lock funds, but Bob does not reveal S_B to Alice
-### Transaction flow: Bob locks SIA -> Alice locks BTC -> Alice refunds BTC after timelock\*1 -> Bob broadcasts tx_SIA_refund after timelock*2
+### Transaction flow: Bob locks SIA -> Alice locks BTC -> Alice refunds BTC after timelock\*1 -> Bob broadcasts tx_SIA_refund after timelock\*2
 Steps 0 - 8. identical to the successful path
 
-8. Bob is offline or otherwise refusing to claim the BTC. Alice waits until locktime*1 has past and spends the BTC. 
+8. Bob is offline or otherwise refusing to claim the BTC. Alice waits until locktime\*1 has past and spends the BTC. 
 
-9. Bob broadcasts tx_refund_SIA after timelock*2.
+9. Bob broadcasts tx_refund_SIA after timelock\*2.
