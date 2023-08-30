@@ -49,7 +49,7 @@ outputs:
 ```
 inputs:
 	#0 : tx_lock_BTC_vout_0 for bob_trade_amount+txfee with script:
-		<bob signature> <alice signature> OP_FALSE OP_PUSHDATA1 OP_TOALTSTACK
+		<bob signature> <alice signature> OP_FALSE
 		OP_IF
 			<timelock*1> OP_CHECKLOCKTIMEVERIFY OP_DROP <public_key(A)> OP_CHECKSIG 
 		OP_ELSE 
@@ -66,6 +66,7 @@ outputs:
 0. Order matching. Both parties agree on volume, price and timelock duration.
 
 1. Both parties generate, exchange and validate keys and proofs:
+
 Alice sends:
 ```
 ecdsa_public_key(S_A) - the ecdsa public key from private key, S_A
@@ -100,18 +101,16 @@ public_key(B) - the public key from private key, B
 10. Alice combines S_A with the now revealed S_B and creates and broadcasts tx_redeem_SIA. Alice can keep this UTXO to be spent at any time in the future because only she knows S_A and S_B.
 
 ## Sequence of an unsuccessful swap where Alice starts with BTC, Bob locks SIA, but Alice goes offline or otherwise refuses to lock her BTC
-### Transaction flow: Bob locks SIA -> Bob broadcasts tx_SIA_refund after timelock*2
-	Steps 0 - 6. identical to the successful path
+### Transaction flow: Bob locks SIA -> Bob broadcasts tx_SIA_refund after timelock\*2
+Steps 0 - 6. identical to the successful path
 
-	7. Alice is offline or otherwise refusing to lock the BTC. Bob broadcasts tx_refund_SIA after timelock*2.
+7. Alice is offline or otherwise refusing to lock the BTC. Bob broadcasts tx_refund_SIA after timelock*2.
 
 
 ## Sequence of an unsuccessful swap where Alice starts with BTC, both parties lock funds, but Bob does not reveal S_B to Alice
-### Transaction flow: Bob locks SIA -> Alice locks BTC -> Alice refunds BTC after timelock*1 -> Bob broadcasts tx_SIA_refund after timelock*2
-	Steps 0 - 8. identical to the successful path
+### Transaction flow: Bob locks SIA -> Alice locks BTC -> Alice refunds BTC after timelock\*1 -> Bob broadcasts tx_SIA_refund after timelock*2
+Steps 0 - 8. identical to the successful path
 
-	8. Bob is offline or otherwise refusing to claim the BTC. Alice waits until locktime*1 has past and spends the BTC. 
+8. Bob is offline or otherwise refusing to claim the BTC. Alice waits until locktime*1 has past and spends the BTC. 
 
-	9. Bob broadcasts tx_refund_SIA after timelock*2.
-
- 
+9. Bob broadcasts tx_refund_SIA after timelock*2.
