@@ -1,6 +1,6 @@
 # Option 1: Introducing New Signature Schemes to Emulate HLTC Behavior. 
 
-Sia supports adding additional signature schemes via soft forks. ref[https://github.com/SiaFoundation/core/blob/ad76cac3058febc60d5a0f2dfe000eb03a1977ca/consensus/validation.go#L523]
+Sia supports [adding additional signature schemes via soft forks](https://github.com/SiaFoundation/core/blob/ad76cac3058febc60d5a0f2dfe000eb03a1977ca/consensus/validation.go#L523).
 
 We believe it possible to emulate HLTC-like behavior with additional signature schemes being introduced into Sia's consensus model.
 
