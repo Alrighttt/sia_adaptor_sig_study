@@ -62,7 +62,8 @@ outputs:
 ```
 
 ## Sequence of a succesful swap where Alice starts with SIA
-### Transaction flow: Bob locks BTC -> Alice locks SIA -> Alice spends BTC -> Bob spends SIA
+Transaction flow: Bob locks BTC -> Alice locks SIA -> Alice spends BTC -> Bob spends SIA
+
 0. Order matching. Both parties agree on volume, price and timelock duration.
 
 1. Both parties generate, exchange and validate keys and proofs:
@@ -102,7 +103,8 @@ public_key(B) - the public key from private key, B
 
 ## Sequence of an unsuccesful swap where Alice starts with SIA, Bob locks BTC, but Alice goes offline or otherwise refuses to lock her SIA
 Transaction flow: Bob locks BTC -> Bob refunds BTC after timelock\*1
-	Steps 0 - 5. identical to the successful path
+
+Steps 0 - 5. identical to the successful path
 
 8. Alice is offline or otherwise refusing to lock the SIA. Bob waits until locktime\*1 has past and spends the BTC. 
 
@@ -110,6 +112,7 @@ Transaction flow: Bob locks BTC -> Bob refunds BTC after timelock\*1
 
 ## Sequence of a unsuccesful swap where Alice starts with SIA, both parties lock funds, but Alice does not reveal S_A to Bob
 Transaction flow: Bob locks BTC -> Alice locks SIA -> Bob refunds BTC after timelock\*1 -> Alice broadcasts tx_SIA_refund after timelock\*2
+
 Steps 0 - 7. identical to the successful path
 
 8. Alice is offline or otherwise refusing to continue.
