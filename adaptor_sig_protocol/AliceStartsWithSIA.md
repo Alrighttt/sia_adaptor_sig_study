@@ -1,7 +1,7 @@
 # Alice starts with SIA.
 
 - S_A - Alice ed25519 private key which may be leaked to Bob
-- S_B - Bob ed25519 private key which may be leaked to Alice
+- S_B - Bob ed25519 private key which may be combined with Alice's S_A to spend funds
 
 - A - Alice secp256k1 private key - not ever leaked to Bob
 - B - Bob secp256k1 private key - not ever leaked to Alice
