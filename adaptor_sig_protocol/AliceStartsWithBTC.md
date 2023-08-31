@@ -1,7 +1,7 @@
 # Alice starts with BTC.
 
-- S_A - Alice ed25519 private key which may be leaked to Bob
 - S_B - Bob ed25519 private key which may be leaked to Alice
+- S_A - Alice ed25519 private key which may be combined with Bob's S_B to spend funds
 
 - A - Alice ed25519 private key - not ever leaked to Bob
 - B - Bob ed25519 private key - not ever leaked to Alice
@@ -61,7 +61,8 @@ outputs:
 ```
 
 ## Sequence of a successful swap where Alice starts with BTC
-### Transaction flow: Bob locks SIA -> Alice locks BTC -> Bob spends BTC -> Alice spends SIA
+
+Transaction flow: Bob locks SIA -> Alice locks BTC -> Bob spends BTC -> Alice spends SIA
 
 0. Order matching. Both parties agree on volume, price and timelock duration.
 
@@ -101,13 +102,17 @@ public_key(B) - the public key from private key, B
 10. Alice combines S_A with the now revealed S_B and creates and broadcasts tx_redeem_SIA. Alice can keep this UTXO to be spent at any time in the future because only she knows S_A and S_B.
 
 ## Sequence of an unsuccessful swap where Alice starts with BTC, Bob locks SIA, but Alice goes offline or otherwise refuses to lock her BTC
-### Transaction flow: Bob locks SIA -> Bob broadcasts tx_SIA_refund after timelock\*2
+
+Transaction flow: Bob locks SIA -> Bob broadcasts tx_SIA_refund after timelock\*2
+
 Steps 0 - 6. identical to the successful path
 
 7. Alice is offline or otherwise refusing to lock the BTC. Bob broadcasts tx_refund_SIA after timelock\*2.
 
 ## Sequence of an unsuccessful swap where Alice starts with BTC, both parties lock funds, but Bob does not reveal S_B to Alice
-### Transaction flow: Bob locks SIA -> Alice locks BTC -> Alice refunds BTC after timelock\*1 -> Bob broadcasts tx_SIA_refund after timelock\*2
+
+Transaction flow: Bob locks SIA -> Alice locks BTC -> Alice refunds BTC after timelock\*1 -> Bob broadcasts tx_SIA_refund after timelock\*2
+
 Steps 0 - 8. identical to the successful path
 
 8. Bob is offline or otherwise refusing to claim the BTC. Alice waits until locktime\*1 has past and spends the BTC. 
