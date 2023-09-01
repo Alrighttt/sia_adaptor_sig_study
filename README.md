@@ -2,7 +2,9 @@
 
 This is the delivery of the grant proposal found [here](https://forum.sia.tech/t/grant-proposal-sia-atomic-swap-with-adaptor-signatures-feasibility-study/341/18).
 
-A presentation was made to summarize the efforts. A video of this presentation can be found [here](https://drive.google.com/file/d/1lJf6rzB3nXXOo-8F4nUtotiJxp3Z5C_s/view).
+The final dev resource and cost estimates can be found in the file, SiaEstimateReport.pdf .
+
+A presentation was made to summarize the efforts. A video of this presentation can be found [here](https://drive.google.com/file/d/1lJf6rzB3nXXOo-8F4nUtotiJxp3Z5C_s/view). We recommend watching this video as the first introduction to this project. 
 
 There are three proposed options for the outcome of this grant, one included in the adaptor_sig_protocol directory and two included in the hltc_emulator_protocol directory.
 
